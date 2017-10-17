@@ -4,7 +4,10 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
-
+	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /Zi /EHa")
+	set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} /DEBUG /OPT:REF /OPT:ICF")
+	set(CMAKE_SHARED_LINKER_FLAGS_RELEASE "${CMAKE_SHARED_LINKER_FLAGS_RELEASE} /DEBUG /OPT:REF /OPT:ICF")
+	add_definitions(-DDEBUGINFO)
 find_package(Qt5 REQUIRED COMPONENTS Widgets OpenGL Xml XmlPatterns Script)
 find_package(Boost COMPONENTS system filesystem thread date_time iostreams serialization chrono)
 find_package(JsonCpp REQUIRED)
@@ -15,6 +18,11 @@ message(STATUS "GTEST found: ${GTEST_FOUND}")
 set(QT_LIBRARIES Qt5::Widgets Qt5::OpenGL Qt5::Xml Qt5::XmlPatterns Qt5::Script)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
+set(OpenCV_INCLUDE_DIRS ${CONAN_INCLUDE_DIRS_OPENCV} CACHE PATH "header dir of OPENCV")
+set(OpenCV_LIBS ${CONAN_LIBS_OPENCV} CACHE FILEPATH "library of OPENCV")
+set(OpenCV_FOUND TRUE)
+
+include_directories(${OpenCV_INCLUDE_DIRS})
 include_directories(${BOOST_INCLUDE_DIRS} ${JSONCPP_INCLUDE_DIR} ${GTEST_INCLUDE_DIRS})
 
 add_subdirectory(src)
